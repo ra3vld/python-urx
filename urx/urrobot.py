@@ -348,8 +348,14 @@ class URRobot(object):
         to robot make the robot stop
         """
         return self.movexs("movel", pose_list, acc, vel, radius, wait, threshold=threshold)
+        
+    def movejs(self, joints, acc=0.01, vel=0.01, radius=0.01, wait=True, threshold=None):
+        """
+        move in joint space with blending
+        """
+        return self.movexs("movej", joints, acc, vel, radius, wait, threshold=threshold, prefix="", joints=True)
 
-    def movexs(self, command, pose_list, acc=0.01, vel=0.01, radius=0.01, wait=True, threshold=None):
+    def movexs(self, command, pose_list, acc=0.01, vel=0.01, radius=0.01, wait=True, threshold=None, prefix="p", joints=False):
         """
         Concatenate several movex commands and applies a blending radius
         pose_list is a list of pose.
@@ -362,11 +368,12 @@ class URRobot(object):
         for idx, pose in enumerate(pose_list):
             if idx == (len(pose_list) - 1):
                 radius = 0
-            prog += self._format_move(command, pose, acc, vel, radius, prefix="p") + "\n"
+            prog += self._format_move(command, pose, acc, vel, radius, prefix=prefix) + "\n"
         prog += end
+        print(prog)
         self.send_program(prog)
         if wait:
-            self._wait_for_move(target=pose_list[-1], threshold=threshold)
+            self._wait_for_move(target=pose_list[-1], threshold=threshold, joints=joints)
             return self.getl()
 
     def stopl(self, acc=0.5):
