@@ -179,7 +179,7 @@ class Robot(URRobot):
         else:
             return self.set_pose(t, acc, vel, wait=wait, command=command, threshold=threshold)
 
-    def movexs(self, command, pose_list, acc=0.01, vel=0.01, radius=0.01, wait=True, threshold=None):
+    def movexs(self, command, pose_list, acc=0.01, vel=0.01, radius=0.01, wait=True, threshold=None, prefix="p", joints=False):
         """
         Concatenate several movex commands and applies a blending radius
         pose_list is a list of pose.
@@ -191,7 +191,7 @@ class Robot(URRobot):
             t = self.csys * m3d.Transform(pose)
             pose = t.pose_vector
             new_poses.append(pose)
-        return URRobot.movexs(self, command, new_poses, acc, vel, radius, wait=wait, threshold=threshold)
+        return URRobot.movexs(self, command, new_poses, acc, vel, radius, wait=wait, threshold=threshold, prefix=prefix, joints=joints)
 
     def movel_tool(self, pose, acc=0.01, vel=0.01, wait=True, threshold=None):
         """

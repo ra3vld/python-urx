@@ -370,7 +370,7 @@ class URRobot(object):
                 radius = 0
             prog += self._format_move(command, pose, acc, vel, radius, prefix=prefix) + "\n"
         prog += end
-        print(prog)
+        # print(prog)
         self.send_program(prog)
         if wait:
             self._wait_for_move(target=pose_list[-1], threshold=threshold, joints=joints)
@@ -448,3 +448,4 @@ class URRobot(object):
         Move down in csys z
         """
         self.up(-z, acc, vel)
+    
