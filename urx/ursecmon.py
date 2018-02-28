@@ -15,6 +15,7 @@ import logging
 import struct
 import socket
 from copy import copy
+import traceback
 import time
 
 __author__ = "Olivier Roulet-Dubonnet"
@@ -238,8 +239,11 @@ class SecondaryMonitor(Thread):
         self._dict = {}
         self._dictLock = Lock()
         self.host = host
-        secondary_port = 30002    # Secondary client interface on Universal Robots
-        self._s_secondary = socket.create_connection((self.host, secondary_port), timeout=0.5)
+        self.secondary_port = 30002    # Secondary client interface on Universal Robots
+        self.socket_connected = False
+        self._s_secondary  = None
+        self.timeout = 2
+        self.connect()
         self._prog_queue = []
         self._prog_queue_lock = Lock()
         self._dataqueue = bytes()
@@ -250,6 +254,14 @@ class SecondaryMonitor(Thread):
 
         self.start()
         self.wait()  # make sure we got some data before someone calls us
+
+    def connect(self):
+        try:
+            self._s_secondary = socket.create_connection((self.host, self.secondary_port), timeout=self.timeout)
+            self.socket_connected = True
+        except Exception as ex:
+            self.socket_connected = False
+            traceback.format_exc()
 
     def send_program(self, prog):
         """
@@ -330,8 +342,18 @@ class SecondaryMonitor(Thread):
                 return ans[0]
             else:
                 # self.logger.debug("Could not find packet in received data")
-                tmp = self._s_secondary.recv(1024)
-                self._dataqueue += tmp
+                try:
+                    tmp = self._s_secondary.recv(1024)
+                    self._dataqueue += tmp
+                except Exception as ex:
+                    self.socket_connected = False
+                    self.logger.debug("Could not find packet in received data")
+                    print("robot disc")
+                    traceback.print_exc()
+                    try:
+                        self.connect()
+                    except:
+                        traceback.print_exc()
 
     def wait(self, timeout=0.5):
         """
