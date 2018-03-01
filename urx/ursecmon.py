@@ -355,7 +355,7 @@ class SecondaryMonitor(Thread):
                     except:
                         traceback.print_exc()
 
-    def wait(self, timeout=0.5):
+    def wait(self, timeout=1):
         """
         wait for next data packet from robot
         """

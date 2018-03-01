@@ -8,6 +8,7 @@ import logging
 
 from urx import urrtmon
 from urx import ursecmon
+from urx import dashboard
 
 __author__ = "Olivier Roulet-Dubonnet"
 __copyright__ = "Copyright 2011-2015, Sintef Raufoss Manufacturing"
@@ -37,6 +38,7 @@ class URRobot(object):
         self.logger.debug("Opening secondary monitor socket")
         self.secmon = ursecmon.SecondaryMonitor(self.host)  # data from robot at 10Hz
 
+        self.dashboard = dashboard.Dashboard(self.host)
         self.rtmon = None
         if use_rt:
             self.rtmon = self.get_realtime_monitor()
