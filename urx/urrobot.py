@@ -210,6 +210,8 @@ class URRobot(object):
         start_dist = self._get_dist(target, joints)
         if threshold is None:
             threshold = start_dist * 0.8
+            if threshold > 0.01:
+                threshold = 0.01
             if threshold < 0.001:  # roboten precision is limited
                 threshold = 0.001
             self.logger.debug("No threshold set, setting it to %s", threshold)
