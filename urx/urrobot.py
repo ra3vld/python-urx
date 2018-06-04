@@ -199,7 +199,7 @@ class URRobot(object):
         prog = "set_tool_voltage(%s)" % (val)
         self.send_program(prog)
 
-    def _wait_for_move(self, target, threshold=None, timeout=5, joints=False):
+    def _wait_for_move(self, target, threshold=None, timeout=2, joints=False):
         """
         wait for a move to complete. Unfortunately there is no good way to know when a move has finished
         so for every received data from robot we compute a dist equivalent and when it is lower than
@@ -210,8 +210,8 @@ class URRobot(object):
         start_dist = self._get_dist(target, joints)
         if threshold is None:
             threshold = start_dist * 0.8
-            if threshold > 0.01:
-                threshold = 0.01
+            if threshold > 0.02:
+                threshold = 0.02
             if threshold < 0.001:  # roboten precision is limited
                 threshold = 0.001
             self.logger.debug("No threshold set, setting it to %s", threshold)
