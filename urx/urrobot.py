@@ -6,9 +6,9 @@ http://support.universal-robots.com/URRobot/RemoteAccess
 
 import logging
 
-from urx import urrtmon
-from urx import ursecmon
-from urx import dashboard
+from . import urrtmon
+from . import ursecmon
+from . import dashboard
 
 __author__ = "Olivier Roulet-Dubonnet"
 __copyright__ = "Copyright 2011-2015, Sintef Raufoss Manufacturing"
